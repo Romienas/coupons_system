@@ -117,7 +117,8 @@ class Admin extends Component {
             code: this.state.couponCode,
             user: this.state.mail,
             date: fullDate,
-            dateStamp: firebase.firestore.Timestamp.fromDate(new Date())
+            dateStamp: firebase.firestore.Timestamp.fromDate(new Date()),
+            printedCoupon: false
         }).then(() => {
             window.alert('Coupon created');
         });

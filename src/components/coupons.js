@@ -13,6 +13,7 @@ import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import * as firebase from 'firebase';
 import DeleteIcon from '@material-ui/icons/Delete';
+import DoneIcon from '@material-ui/icons/Done';
 
 const useStyles = theme => ({
     root: {
@@ -21,6 +22,10 @@ const useStyles = theme => ({
     },
     deleteIcon: {
         cursor: 'pointer',
+    },
+    doneIcon: {
+        cursor: 'pointer',
+        color: 'green'
     },
     progress: {
         flexGrow: 1
@@ -33,7 +38,7 @@ class Coupons extends Component {
         super(props);
         this.state = {
             couponArray: [],
-            loaded: false
+            loaded: false,
         }
     }
 
@@ -69,6 +74,15 @@ class Coupons extends Component {
                 </TableCell>
                 <TableCell>
                     {/* TODO */}
+                    <DoneIcon
+                        className={classes.doneIcon}
+                        onClick={ (number) => {
+                            const db = firebase.firestore;
+                            db.collection('/coupons').doc(number.code).set({
+                                printedCoupon: !number.printedCoupon
+                            });
+                        }}
+                    />
                     <DeleteIcon 
                         onClick={ () => {
                             const db = firebase.firestore();
