@@ -23,12 +23,14 @@ const useStyles = theme => ({
     deleteIcon: {
         cursor: 'pointer',
     },
-    doneIcon: {
+    doneIconGrey: {
         cursor: 'pointer',
-        color: 'green'
     },
     progress: {
         flexGrow: 1
+    },
+    tableRow: {
+        backgroundColor: '#f79f88'
     }
 });
 
@@ -40,6 +42,7 @@ class Coupons extends Component {
             couponArray: [],
             loaded: false,
         }
+        this.doneIcon = this.doneIcon.bind(this);
     }
 
     componentDidUpdate(){
@@ -50,13 +53,35 @@ class Coupons extends Component {
                 couponArray: data,
                 loaded: true
             })
+
+            this.doneIcon = this.doneIcon.bind(this);
           });
+    }
+
+    doneIcon = (number) => {
+        const db = firebase.firestore();
+        if (number.printedCoupon === false){
+            db.collection('/coupons').doc(number.code).update({
+                printedCoupon: true
+            }).catch((error) => {
+                console.log('error: ' + error)
+            });
+        } else if(number.printedCoupon === true){
+            db.collection('/coupons').doc(number.code).update({
+                printedCoupon: false
+            }).catch((error) => {
+                console.log('error: ' + error)
+            });
+        }
     }
 
     render() {
         const { classes } = this.props;
         let listItem = this.state.couponArray.map((number) => 
-            <TableRow key={number.code}>
+            <TableRow 
+                key={number.code}
+                className={number.printedCoupon ? classes.tableRow : null}
+            >
                 <TableCell>
                     <Checkbox />
                 </TableCell>
@@ -73,15 +98,9 @@ class Coupons extends Component {
                     {number.date}
                 </TableCell>
                 <TableCell>
-                    {/* TODO */}
                     <DoneIcon
                         className={classes.doneIcon}
-                        onClick={ (number) => {
-                            const db = firebase.firestore;
-                            db.collection('/coupons').doc(number.code).set({
-                                printedCoupon: !number.printedCoupon
-                            });
-                        }}
+                        onClick={() => this.doneIcon(number)}
                     />
                     <DeleteIcon 
                         onClick={ () => {
