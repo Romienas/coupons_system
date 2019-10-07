@@ -7,13 +7,18 @@ import {
     TableCell, 
     TableBody,
     LinearProgress,
-    Checkbox
+    Checkbox,
+    Button
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import * as firebase from 'firebase';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DoneIcon from '@material-ui/icons/Done';
+import PrintIcon from '@material-ui/icons/Print';
+import CloseIcon from '@material-ui/icons/Close';
+import PdfGenerator from '../pdfGenerator';
+import { PDFViewer } from '@react-pdf/renderer';
 
 const useStyles = theme => ({
     root: {
@@ -30,7 +35,7 @@ const useStyles = theme => ({
         flexGrow: 1
     },
     tableRow: {
-        backgroundColor: '#f79f88'
+        backgroundColor: '#dcdff1'
     }
 });
 
@@ -41,8 +46,11 @@ class Coupons extends Component {
         this.state = {
             couponArray: [],
             loaded: false,
+            checked: [],
+            print: ''
         }
         this.doneIcon = this.doneIcon.bind(this);
+        this.handleCheck = this.handleCheck.bind(this);
     }
 
     componentDidUpdate(){
@@ -53,8 +61,6 @@ class Coupons extends Component {
                 couponArray: data,
                 loaded: true
             })
-
-            this.doneIcon = this.doneIcon.bind(this);
           });
     }
 
@@ -75,6 +81,52 @@ class Coupons extends Component {
         }
     }
 
+    handleCheck = (event, check) => {
+        if(event.target.checked){
+        this.setState({
+            checked: [...this.state.checked, check]
+        })} else {
+            let index = this.state.checked.indexOf(check)
+            this.setState({
+                checked: this.state.checked.filter((_, i) => i !== index)
+            })
+        }
+    }
+
+    dataFunc = () => {
+        let array = this.state.print;
+        return array;
+    }
+
+    print = () => {
+        if(this.state.print === ''){
+            this.setState({
+                print: 
+                <div 
+                    className='pdf-background'
+                    onClick={this.print}
+                >
+                    <CloseIcon 
+                        color='inherit'
+                        className='pdf-button--close'    
+                    />
+                    <div className='pdfBlock'>
+                        <PDFViewer 
+                            width='100%'
+                            height='100%'    
+                        >
+                            <PdfGenerator data={this.dataFunc} />
+                        </PDFViewer>
+                    </div>
+                </div>
+            })
+        }else{
+            this.setState({
+                print: ''
+            })
+        }
+    }
+
     render() {
         const { classes } = this.props;
         let listItem = this.state.couponArray.map((number) => 
@@ -83,7 +135,10 @@ class Coupons extends Component {
                 className={number.printedCoupon ? classes.tableRow : null}
             >
                 <TableCell>
-                    <Checkbox />
+                    <Checkbox 
+                        onChange={(event) => this.handleCheck(event, number.code)}
+                        color='primary'
+                    />
                 </TableCell>
                 <TableCell>
                     {number.discount}%
@@ -123,10 +178,17 @@ class Coupons extends Component {
                         <div className={classes.progress}>
                             <LinearProgress />
                         </div> : null }
+                    {this.state.print}
                     <Table>
                         <TableBody>
                             <TableRow>
                                 <TableCell>
+                                    <Button
+                                        onClick={this.print}
+                                        color='primary'
+                                    >
+                                        <PrintIcon />
+                                    </Button>
                                 </TableCell>
                                 <TableCell>
                                     Discount
