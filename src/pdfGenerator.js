@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 
 // Create styles
@@ -15,22 +15,20 @@ const styles = StyleSheet.create({
 });
 
 // Create Document Component
-const PdfGenerator = (props) => {
-    // TODO
-    // let dataArray = this.props.data();
-    // console.log(dataArray)
+export class PdfGenerator extends Component {
+  render(){
+    let array = this.props.data;
     return(
-  <Document>
-    <Page size="A4" style={styles.page}>
-      <View style={styles.section}>
-        <Text></Text>
-      </View>
-      <View style={styles.section}>
-        <Text>Section #2</Text>
-      </View>
-    </Page>
-  </Document>
-);
-    }
-
-export default PdfGenerator;
+      <Document>
+        <Page size="A4" style={styles.page}>
+          <View style={styles.section}>
+            <Text>{array[0]}</Text>
+          </View>
+          <View style={styles.section}>
+            <Text>Section #2</Text>
+          </View>
+        </Page>
+      </Document>
+    );
+  }
+}

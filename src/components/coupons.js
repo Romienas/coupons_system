@@ -17,7 +17,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import DoneIcon from '@material-ui/icons/Done';
 import PrintIcon from '@material-ui/icons/Print';
 import CloseIcon from '@material-ui/icons/Close';
-import PdfGenerator from '../pdfGenerator';
+import {PdfGenerator} from '../pdfGenerator';
 import { PDFViewer } from '@react-pdf/renderer';
 
 const useStyles = theme => ({
@@ -93,11 +93,6 @@ class Coupons extends Component {
         }
     }
 
-    dataFunc = () => {
-        let array = this.state.print;
-        return array;
-    }
-
     print = () => {
         if(this.state.print === ''){
             this.setState({
@@ -115,7 +110,7 @@ class Coupons extends Component {
                             width='100%'
                             height='100%'    
                         >
-                            <PdfGenerator data={this.dataFunc} />
+                            <PdfGenerator data={this.state.checked} />
                         </PDFViewer>
                     </div>
                 </div>
