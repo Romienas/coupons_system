@@ -8,7 +8,8 @@ import {
     TableBody,
     LinearProgress,
     Checkbox,
-    Button
+    Button,
+    Tooltip
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -28,8 +29,9 @@ const useStyles = theme => ({
     deleteIcon: {
         cursor: 'pointer',
     },
-    doneIconGrey: {
+    doneIcon: {
         cursor: 'pointer',
+        margin: '0 10px'
     },
     progress: {
         flexGrow: 1
@@ -148,20 +150,24 @@ class Coupons extends Component {
                     {number.date}
                 </TableCell>
                 <TableCell>
-                    <DoneIcon
-                        className={classes.doneIcon}
-                        onClick={() => this.doneIcon(number)}
-                    />
-                    <DeleteIcon 
-                        onClick={ () => {
-                            const db = firebase.firestore();
-                            db.collection('/coupons').doc(number.code).delete().then(() =>{
-                                window.alert('Coupon Deleted!');
-                            })}
-                        }
-                        color='error'
-                        className={classes.deleteIcon}
-                     />
+                    <Tooltip title="Mark if printed" placement="top">
+                        <DoneIcon
+                            className={classes.doneIcon}
+                            onClick={() => this.doneIcon(number)}
+                        />
+                    </Tooltip>
+                    <Tooltip title="Delete coupon" placement="top">
+                        <DeleteIcon 
+                            onClick={ () => {
+                                const db = firebase.firestore();
+                                db.collection('/coupons').doc(number.code).delete().then(() =>{
+                                    window.alert('Coupon Deleted!');
+                                })}
+                            }
+                            color='error'
+                            className={classes.deleteIcon}
+                        />
+                     </Tooltip>
                 </TableCell>
             </TableRow>
         )
@@ -178,12 +184,14 @@ class Coupons extends Component {
                         <TableBody>
                             <TableRow>
                                 <TableCell>
-                                    <Button
-                                        onClick={this.print}
-                                        color='primary'
-                                    >
-                                        <PrintIcon />
-                                    </Button>
+                                    <Tooltip title="Print Selected" placement="top">
+                                        <Button
+                                            onClick={this.print}
+                                            color='primary'
+                                        >
+                                            <PrintIcon />
+                                        </Button>
+                                    </Tooltip>
                                 </TableCell>
                                 <TableCell>
                                     Discount
