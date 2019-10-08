@@ -66,6 +66,7 @@ class Coupons extends Component {
           });
     }
 
+    //mark if coupon was printed
     doneIcon = (number) => {
         const db = firebase.firestore();
         if (number.printedCoupon === false){
@@ -83,18 +84,20 @@ class Coupons extends Component {
         }
     }
 
-    handleCheck = (event, check) => {
+    //handle checked coupons
+    handleCheck = (event, check, discount) => {
         if(event.target.checked){
         this.setState({
-            checked: [...this.state.checked, check]
+            checked: [...this.state.checked, {code: check, discountValue: discount}]
         })} else {
-            let index = this.state.checked.indexOf(check)
+            let index = this.state.checked.map(item => {return item.code;}).indexOf(check)
             this.setState({
                 checked: this.state.checked.filter((_, i) => i !== index)
             })
         }
     }
 
+    // open generated pdf screen
     print = () => {
         if(this.state.print === ''){
             this.setState({
@@ -133,7 +136,7 @@ class Coupons extends Component {
             >
                 <TableCell>
                     <Checkbox 
-                        onChange={(event) => this.handleCheck(event, number.code)}
+                        onChange={(event) => this.handleCheck(event, number.code, number.discount)}
                         color='primary'
                     />
                 </TableCell>
