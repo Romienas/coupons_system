@@ -49,7 +49,7 @@ class Coupons extends Component {
             couponArray: [],
             loaded: false,
             checked: [],
-            print: ''
+            print: '',
         }
         this.doneIcon = this.doneIcon.bind(this);
         this.handleCheck = this.handleCheck.bind(this);
@@ -153,18 +153,18 @@ class Coupons extends Component {
                     {number.date}
                 </TableCell>
                 <TableCell>
-                    <Tooltip title="Mark if printed" placement="top">
+                    <Tooltip title="Pažymėti kad atspausdinta" placement="top">
                         <DoneIcon
                             className={classes.doneIcon}
                             onClick={() => this.doneIcon(number)}
                         />
                     </Tooltip>
-                    <Tooltip title="Delete coupon" placement="top">
+                    <Tooltip title="Ištrinti" placement="top">
                         <DeleteIcon 
                             onClick={ () => {
                                 const db = firebase.firestore();
                                 db.collection('/coupons').doc(number.code).delete().then(() =>{
-                                    window.alert('Coupon Deleted!');
+                                    window.alert('Kuponas ištrintas!');
                                 })}
                             }
                             color='error'
@@ -178,16 +178,16 @@ class Coupons extends Component {
         return(
             <Container maxWidth='md'>
                 <Paper className={classes.root}>
-                    {this.state.couponArray === false ? 
+                    {this.state.loaded === false ? 
                         <div className={classes.progress}>
-                            <LinearProgress />
-                        </div> : null }
+                        <LinearProgress />
+                    </div> : null }
                     {this.state.print}
                     <Table>
                         <TableBody>
                             <TableRow>
                                 <TableCell>
-                                    <Tooltip title="Print Selected" placement="top">
+                                    <Tooltip title="Spausdinti pažymėtus" placement="top">
                                         <Button
                                             onClick={this.print}
                                             color='primary'
@@ -197,16 +197,16 @@ class Coupons extends Component {
                                     </Tooltip>
                                 </TableCell>
                                 <TableCell>
-                                    Discount
+                                    Nuolaida
                                 </TableCell>
                                 <TableCell>
-                                    Coupon Code
+                                    Kodas
                                 </TableCell>
                                 <TableCell>
-                                    User
+                                    Vartotojas
                                 </TableCell>
                                 <TableCell>
-                                    Date
+                                    Data
                                 </TableCell>
                                 <TableCell>
                                 </TableCell>

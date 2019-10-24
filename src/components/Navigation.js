@@ -95,7 +95,7 @@ class Navigation extends Component {
                         </Typography>
 
                         <Button onClick={this.signout} color='inherit'>
-                            Sign Out
+                            Atsijungti
                         </Button>
                     </Toolbar>
                 </AppBar>

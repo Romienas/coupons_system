@@ -138,7 +138,7 @@ class Admin extends Component {
                                 <InputLabel 
                                     htmlFor='discount' 
                                     className={classes.inputLabel}>
-                                    Choose discount
+                                    Nuolaidos dydis
                                 </InputLabel>
                                 <Select
                                     value={this.state.selectedValue}
@@ -156,7 +156,7 @@ class Admin extends Component {
                             </FormControl>
                             <TextField
                                 id='couponCode'
-                                label='Code'
+                                label='Kodas'
                                 className={classes.textField}
                                 value={this.state.couponCode}
                                 margin='normal'
@@ -166,7 +166,7 @@ class Admin extends Component {
                                 className={classes.button}
                                 onClick={this.saveCoupon}
                             >
-                                Save coupon
+                                Išsaugoti
                             </Button>
                         </form>
                     </Paper>
