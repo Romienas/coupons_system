@@ -46,15 +46,17 @@ class Admin extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            couponCode: '',
+            couponCode: [],
             selectedValue: 5,
             user: '',
-            mail: ''
+            mail: '',
+            couponsNumber: 1
         }
 
         this.generator = this.generator.bind(this);
         this.changeSelection = this.changeSelection.bind(this);
         this.getUser = this.getUser.bind(this);
+        this.couponsNumber = this.couponsNumber.bind(this);
     }
 
     componentDidMount() {
@@ -62,18 +64,25 @@ class Admin extends Component {
         this.getUser();
     }
 
+    // Ganerate new code
     generator = () => {
         let codeLenght = 8;
-        let code = '';
         let symbol = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        for(let i = 0; i < codeLenght; i++){
-           code += symbol.charAt(Math.floor(Math.random() * symbol.length));
+        let codeArr = [];
+
+        for(let j = 0; j < this.state.couponsNumber; j++){
+            let code = '';
+            for(let i = 0; i < codeLenght; i++){
+                code += symbol.charAt(Math.floor(Math.random() * symbol.length));
+            }
+            codeArr.push(code);
         }
         this.setState({
-            couponCode: code
-        });
+            couponCode: codeArr
+        }, () => console.log(this.state.couponCode));
     }
 
+    // Get user
     getUser = () => {
         firebase.auth().onAuthStateChanged((user) =>{
             if(user) {
@@ -90,7 +99,7 @@ class Admin extends Component {
         });
     }
 
-
+    // Selects discount
     changeSelection = (event) => {
         this.setState({
             selectedValue: event.target.value
@@ -98,6 +107,22 @@ class Admin extends Component {
         this.generator();
     }
 
+
+    // How much coupons have to be generated
+    couponsNumber = (event) => {
+        let eventValue = parseInt(event.target.value);
+
+        if (isNaN(eventValue)){
+            alert('Įveskite skaičių!')
+        } else {
+            this.setState({
+                couponsNumber: eventValue
+            }, () => console.log(this.state.couponsNumber));
+        }
+        this.generator();
+    }
+
+    // Add coupons to database
     saveCoupon = () => {
         const date = new Date();
         let year = date.getFullYear();
@@ -112,16 +137,20 @@ class Admin extends Component {
         const fullDate = year + '-' + month + '-' + day;
 
         const db = firebase.firestore();
-        db.collection('/coupons').doc(this.state.couponCode).set({
-            discount: this.state.selectedValue,
-            code: this.state.couponCode,
-            user: this.state.mail,
-            date: fullDate,
-            dateStamp: firebase.firestore.Timestamp.fromDate(new Date()),
-            printedCoupon: false
-        }).then(() => {
-            window.alert('Coupon created');
-        });
+
+        for( let i = 0; i < this.state.couponCode.length; i++){
+            db.collection('/coupons').doc(this.state.couponCode[i]).set({
+                discount: this.state.selectedValue,
+                code: this.state.couponCode[i],
+                user: this.state.mail,
+                date: fullDate,
+                dateStamp: firebase.firestore.Timestamp.fromDate(new Date()),
+                printedCoupon: false,
+                used: false
+            }).then(() => {
+            });
+        };
+        window.alert('Kuponai sukurti');
         this.generator();
     }
 
@@ -160,6 +189,18 @@ class Admin extends Component {
                                 className={classes.textField}
                                 value={this.state.couponCode}
                                 margin='normal'
+                            />
+                            <TextField
+                                id="couponsNumber"
+                                label="Kuponų skaičius"
+                                onChange={this.couponsNumber}
+                                type="number"
+                                value={this.state.couponsNumber}
+                                className={classes.textField}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                margin="normal"
                             />
                             <Button 
                                 color='primary' 
