@@ -104,7 +104,6 @@ class Admin extends Component {
         this.setState({
             selectedValue: event.target.value
         })
-        this.generator();
     }
 
 
