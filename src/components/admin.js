@@ -76,12 +76,14 @@ class Admin extends Component {
             for(let i = 0; i < codeLenght; i++){
                 code += symbol.charAt(Math.floor(Math.random() * symbol.length));
             }
-            this.setState({
-                couponCode: [...this.state.couponCode, code]
-            }, () => console.log(this.state.couponCode));
+            
+            codeArr.push(code);
         }
+        this.setState({
+            couponCode: codeArr
+        }, () => console.log('setState', this.state.couponCode));
 
-        console.log(codeArr)
+        console.log('generator', codeArr)
     }
 
     // Get user
