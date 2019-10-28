@@ -14,6 +14,7 @@ import PropTypes from 'prop-types';
 import * as firebase from 'firebase';
 import Coupons from './coupons';
 
+
 const useStyles = theme => ({
     root: {
         padding: theme.spacing(3, 2),
@@ -75,11 +76,12 @@ class Admin extends Component {
             for(let i = 0; i < codeLenght; i++){
                 code += symbol.charAt(Math.floor(Math.random() * symbol.length));
             }
-            codeArr.push(code);
+            this.setState({
+                couponCode: [...this.state.couponCode, code]
+            }, () => console.log(this.state.couponCode));
         }
-        this.setState({
-            couponCode: codeArr
-        }, () => console.log(this.state.couponCode));
+
+        console.log(codeArr)
     }
 
     // Get user
@@ -150,6 +152,7 @@ class Admin extends Component {
             });
         };
         window.alert('Kuponai sukurti');
+        console.log('issaugoti', this.state.couponCode)
         this.generator();
     }
 
