@@ -66,12 +66,19 @@ class Admin extends Component {
     }
 
     // Ganerate new code
-    generator = () => {
+    generator = (eventValue) => {
         let codeLenght = 8;
         let symbol = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         let codeArr = [];
+        
+        if(eventValue === undefined){
+            eventValue = 1;
+            this.setState({
+                couponsNumber: 1
+            })
+        }
 
-        for(let j = 0; j < this.state.couponsNumber; j++){
+        for(let j = 0; j < eventValue; j++){
             let code = '';
             for(let i = 0; i < codeLenght; i++){
                 code += symbol.charAt(Math.floor(Math.random() * symbol.length));
@@ -88,7 +95,7 @@ class Admin extends Component {
 
     // Get user
     getUser = () => {
-        firebase.auth().onAuthStateChanged((user) =>{
+        firebase.auth().onAuthStateChanged((user) => {
             if(user) {
                 this.setState({
                     user,
@@ -115,14 +122,15 @@ class Admin extends Component {
     couponsNumber = (event) => {
         let eventValue = parseInt(event.target.value);
 
-        if (isNaN(eventValue)){
+        if (isNaN(eventValue) || eventValue < 1){
             alert('Įveskite skaičių!')
         } else {
             this.setState({
                 couponsNumber: eventValue
-            }, () => console.log(this.state.couponsNumber));
+            }, () => console.log('kuponu skaicius ', this.state.couponsNumber));
+        
+            this.generator(eventValue);
         }
-        this.generator();
     }
 
     // Add coupons to database
