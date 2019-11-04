@@ -196,13 +196,6 @@ class Admin extends Component {
                                 </Select>
                             </FormControl>
                             <TextField
-                                id='couponCode'
-                                label='Kodas'
-                                className={classes.textField}
-                                value={this.state.couponCode}
-                                margin='normal'
-                            />
-                            <TextField
                                 id="couponsNumber"
                                 label="Kuponų skaičius"
                                 onChange={this.couponsNumber}
