@@ -88,9 +88,7 @@ class Admin extends Component {
         }
         this.setState({
             couponCode: codeArr
-        }, () => console.log('setState', this.state.couponCode));
-
-        console.log('generator', codeArr)
+        });
     }
 
     // Get user
@@ -127,7 +125,7 @@ class Admin extends Component {
         } else {
             this.setState({
                 couponsNumber: eventValue
-            }, () => console.log('kuponu skaicius ', this.state.couponsNumber));
+            });
         
             this.generator(eventValue);
         }
@@ -162,7 +160,6 @@ class Admin extends Component {
             });
         };
         window.alert('Kuponai sukurti');
-        console.log('issaugoti', this.state.couponCode)
         this.generator();
     }
 
